@@ -1,5 +1,5 @@
-const sql = require('../sql').bd;
-
+const sql      = require('../sql').bd;
+const vagalume = require('./vagalume');
 /* ----------modelo de objeto
 */
 var teste = {
@@ -9,25 +9,15 @@ var teste = {
     musica: ['musica1', 'musica2', 'musica3', 'musica4', 'musica5']
 }
 
-//-------------debug-------------------//
-function mostrar(){
-    sql.serialize(function () {
-        console.log('top2');
-        sql.each('SELECT id_disco, nome_disco FROM disco', (err, row) => {
-            console.log('top1');
-            console.log(row.id_disco + ' + ' + row.nome_disco);
-        });
-    });
-}
-
 function newDisco(disco){
     try{
-        sql.serialize(function () {
-            sql.run('INSERT INTO disco (nome_disco, autor, ano) Values (?,?,?)',
-                    [disco.nome_disco, disco.autor, disco.ano],
-                function(err) {
-                    console.log('lastid: ' + this.lastID);
-                    newMusica(disco.musica, this.lastID);     
+        vagalume.getCapa(disco.autor, disco.musica[0]).then(resp => {
+            sql.serialize(function () {
+                sql.run('INSERT INTO disco (nome_disco, autor, ano, img) Values (?,?,?,?)',
+                        [disco.nome_disco, disco.autor, disco.ano, resp],
+                    function(err) {
+                        newMusica(disco.musica, this.lastID);     
+                });
             });
         });
     }
@@ -46,5 +36,5 @@ function newMusica(musica, id_disco){
     });
 }
 
+exports.newMusica = newMusica;
 exports.newDisco = newDisco;
-

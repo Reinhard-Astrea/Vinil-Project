@@ -1,6 +1,6 @@
 {
   "name": "vinil-project",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -9,10 +9,12 @@
   },
   "author": "Reinhard Van Astrea",
   "license": "ISC",
-  "devDependencies": {
-    "electron": "^13.1.7"
-  },
   "dependencies": {
+    "bootstrap": "^5.0.2",
+    "electron": "^13.1.7",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2",
     "sqlite3": "^5.0.2"
   }
 }

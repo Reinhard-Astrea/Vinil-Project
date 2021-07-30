@@ -1,5 +1,5 @@
 const sqlite = require('sqlite3').verbose();
-const bd = new sqlite.Database(__dirname +  '/vinil.bd');
+const bd = new sqlite.Database(__dirname +  '/BD/vinil.bd');
 
 //-------------criação do banco (caso não exista)--------------------//
 bd.serialize(() => {
@@ -7,7 +7,8 @@ bd.serialize(() => {
                 id_disco INTEGER PRIMARY KEY,
                 nome_disco TEXT NOT NULL, 
                 autor TEXT NOT NULL,
-                ano INTEGER NOT NULL
+                ano INTEGER NOT NULL,
+                img TEXT NOT NULL
     );`);
     bd.run(`CREATE TABLE if not exists musica (
             key_disco INTEGER,    

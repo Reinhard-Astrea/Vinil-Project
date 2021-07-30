@@ -3,10 +3,9 @@ const insert = require('../routes/insert');
 //-------------------eventos-------------------------//
 
 //incia as funções
-exports.addInit = () =>{
-    const button = document.getElementById('add');
-
-    button.addEventListener('click', event => {
+exports.Init = () =>{
+    document.getElementById('add')
+    .addEventListener('click', event => {
         formulario();
         addMusica();
         cadastrar();
@@ -31,10 +30,11 @@ function enter(){
             document.getElementsByClassName('musica').item(0).focus();
     });
 }
+exports.enter = enter;
 
 //adiciona novos inputs de musica
 function addMusica(){
-    let musica1 = document.getElementById('divForm');
+    let inputArea = document.getElementById('inputArea');
     let lastMusica = document.getElementsByClassName('musica');
     let pos = lastMusica.length;
     let lastMusica1 = lastMusica.item(pos -1);
@@ -42,7 +42,8 @@ function addMusica(){
 
     lastMusica1.addEventListener('input', ev = () => {
         if(!(lastMusica.item(pos))){
-            musica1.insertAdjacentHTML('beforeend', '<input type="text" class="musica" placeholder="musica">');
+            inputArea.insertAdjacentHTML('beforeend',
+            `<input class="form-control text-center mb-3 musica"  type="text" placeholder="Musica" aria-label="default input example">`);
             lastMusica1.addEventListener('keyup', function(event){
                 if(event.key == 'Enter')
                     lastMusica.item(pos).focus();
@@ -50,11 +51,12 @@ function addMusica(){
             addMusica();
         }
         else{
-            if(lastMusica1.value.length == 0)
+            if(lastMusica1.value.length == 0 && lastMusica.item(pos).value.length == 0)
             lastMusica.item(pos).remove();
         }
     });
 }
+exports.addMusica = addMusica;
 
 //espera um click em cadastro para adicionar ao banco
 function cadastrar(){
@@ -63,6 +65,9 @@ function cadastrar(){
         let disco = new Disco();
         insert.newDisco(disco);
         formulario();
+        addMusica();
+        cadastrar();
+        enter();
     });
 }
 
@@ -78,24 +83,29 @@ class Disco{
         for(let i = 0; i < aux.length -1; i++){
             this.musica.push(aux.item(i).value);
         }
+        if(aux.item(aux.length -1).value.length > 0){
+            this.musica.push(aux.item(aux.length -1).value);
+        }
     }
 }
+exports.Disco = Disco;
 
 //-------------------------end class------------------------//
 //cria o formulariode cadastro
 function formulario(){
-    let section = document.getElementById('sec');
+    let section = document.getElementById('main');
 
     section.innerHTML = `
-    <form action="">
-        <div id="divForm">
-            <input type="text" id="nome_disco", placeholder="Nome Do Disco">
-            <input type="text" id="autor" placeholder="Autor">
-            <input type="text" id="ano" placeholder="Ano">
-            <input type="text" id="musica1" class="musica" placeholder="musica">
+        <div class="container" id="divForm" style="width: 80%;">
+            <div id="inputArea">
+                <input class="form-control text-center mb-3" id="nome_disco" type="text" placeholder="Disco" aria-label="default input example">
+                <input class="form-control text-center mb-3" id="autor" type="text" placeholder="Autor" aria-label="default input example">
+                <input class="form-control text-center mb-3" id="ano" type="text" placeholder="Ano" aria-label="default input example">
+                <input class="form-control text-center mb-3 musica"  type="text" placeholder="Musica" aria-label="default input example">
+            </div>
+            <div class="d-grid gap-2">
+                <button type="button" id="cadastrar" class="btn btn-success">Cadastrar</button>
+            </div>
         </div>
-
-        <input type="button" value="Cadastrar" id="cadastrar">
-    </form> 
     `;
 }

@@ -1,13 +1,28 @@
-table{
-    width: 100%;
-    border-collapse: collapse;
-    color: white;
+
+.img-tam{
+    width: 202px;
+    height: 202px;
 }
 
-#table{
-    padding: 200px;
+
+@media only screen and (max-width: 1185px) {
+    .img-tam{
+        width: 166px;
+        height: 166px;
+    }
 }
 
-table, th, td {
-    border: 1px solid rgb(141, 141, 141);
+
+@media only screen and (max-width: 992px) {
+    .img-tam{
+        width: 118px;
+        height: 118px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .img-tam{
+        width: auto;
+        height: auto;
+    }
 }

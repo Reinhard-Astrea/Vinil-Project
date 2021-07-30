@@ -1,137 +1,54 @@
 const select = require('../routes/select.js');
+const disco = require('./disco');
 
 exports.init = () => {
   initTable();
   clickLogo();
-  pesquisa();
 }
 
 function clickLogo(){
   document.getElementById('logo')
   .addEventListener('click', Event =>{
     initTable();
-  })
-}
-
-function pesquisa(){
-  document.getElementById('txtBusca')
-  .addEventListener('input', Event =>{
-    if(document.getElementById('txtBusca').value == '')
-      initTable();
-    else
-      busca();
-  })
-}
-
-async function busca(){
-  let sec = document.getElementById('sec');
-  sec.innerHTML = `
-    <table id="table">
-          <thead>
-            <tr>
-              <td>ID</td>
-              <td>Disco</td>
-              <td>Musica</td>
-              <td>Ano</td>
-              <td>Autor</td>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-
-          </tbody>
-      </table>
-  `;
-
-  select.pesquisa(document.getElementById('txtBusca').value).then(rest =>{
-    let table = document.getElementById('tbody');
-
-    for(let u of rest){
-      table.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td class="id_disco"   >${u.id_disco}</td>
-          <td class="nome_disco" >${u.nome_disco}</td>
-          <td class="nome_musica">${u.nome_musica}</td>
-          <td class="ano"        >${u.ano}</td>
-          <td class="autor"      >${u.autor}</td>
-        </tr>
-      `);
-      click();
-    }
-
+  });
+  document.getElementById('home')
+  .addEventListener('click', Event =>{
+    initTable();
   });
 }
 
-
 function initTable(){
-  let sec = document.getElementById('sec');
+  let sec = document.getElementById('main');
   sec.innerHTML = `
-    <table id="table">
-          <thead>
-            <tr>
-              <td>ID</td>
-              <td>Disco</td>
-              <td>Musica</td>
-              <td>Ano</td>
-              <td>Autor</td>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-
-          </tbody>
-      </table>
+    <div class="row row-cols-1 row-cols-md-5 g-4" id="Tcards"></div>
   `;
 
   select.allDiscos().then(rest =>{
-    let table = document.getElementById('tbody');
+    let table = document.getElementById('Tcards');
 
     for(let u of rest){
       table.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td class="id_disco"  >${u.id_disco}</td>
-          <td class="nome_disco">${u.nome_disco}</td>
-          <td                   >------</td>
-          <td class="ano"       >${u.ano}</td>
-          <td class="autor"     >${u.autor}</td>
-        </tr>
+        <div class="col card-disco">
+          <div class="card text-white bg-dark bg-gradient h-100">
+            <img src="../../main/BD/img/${u.img}" class="card-img-top img-tam"  alt="...">
+            <div class="card-body">
+              <h5 class="card-title">${u.nome_disco}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">${u.autor}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">${u.ano}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">${u.id_disco}</h6>
+            </div>
+          </div>
+        </div>
       `);
-      click(false)
+      click(u);
     }
   });
 }
 
-function click(valida){ 
-  let txtBusca = document.getElementById('txtBusca');
-
-  if(valida){
-    let nome_musica = getLastElementsByClassName('nome_musica');
-    nome_musica.addEventListener('click', Event =>{
-      txtBusca.value = nome_musica.value;
-      busca();
-    });
-  }
-
-  let id_disco = getLastElementsByClassName('id_disco');
-  id_disco.addEventListener('click', Event =>{
-    txtBusca.value = id_disco.innerText;
-    busca();
-  });
-
-  let nome_disco = getLastElementsByClassName('nome_disco');
-  nome_disco.addEventListener('click', Event =>{
-    txtBusca.value = nome_disco.innerText;
-    busca();
-  });
-
-  let ano = getLastElementsByClassName('ano');
-  ano.addEventListener('click', Event =>{
-    txtBusca.value = ano.innerText;
-    busca();
-  });
-
-  let autor = getLastElementsByClassName('autor');
-  autor.addEventListener('click', Event =>{
-    txtBusca.value = autor.innerText;
-    busca();
+function click(u){
+  let lastCard_disco =  getLastElementsByClassName('card-disco');
+  lastCard_disco.addEventListener('click', Event =>{
+    disco.viewDisco(u)
   });
 }
 
@@ -139,3 +56,7 @@ function getLastElementsByClassName(nameClass){
   let doc = document.getElementsByClassName(nameClass);
   return doc.item(doc.length -1);
 }
+
+exports.click = click;
+exports.initTable = initTable;
+exports.getLastElementsByClassName = getLastElementsByClassName;
